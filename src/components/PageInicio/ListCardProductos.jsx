@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const ListCardProductos = () => {
-
-
+export const ListCardProductos = ({producto}) => {
+ const {name, image, description, price} = producto
+ //console.log(producto)
   return (
     <>
       <div
@@ -10,15 +10,15 @@ export const ListCardProductos = () => {
   
         <img
           class="rounded-t-lg w-48 "
-          src="public/img/guitarra_01.jpg" //src={`/img/${image}.jpg`} alt=""
+          src={`/img/${image}.jpg`} //src={`/img/${image}.jpg`} alt=""
           alt="imagen guitarra"/>
 
       <div class="p-6 text-surface dark:text-white">
-        <h5 class="mb-2 text-xl font-medium leading-tight">Card title</h5>
+        <h5 class="mb-2 text-xl font-medium leading-tight">{name}</h5>
         <p class="mb-4 text-base">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content
+         {description}
         </p>
+        <p class="font-black text-primary text-lg">${price}</p>
         <button
           type="button"
           className= "bg-red-500 text-white rounded px-8 py-4 hover:bg-red-900"
