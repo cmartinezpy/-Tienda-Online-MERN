@@ -4,7 +4,7 @@ import { NavList } from './NavList'
 
 export const MenuDashboard = () => {
 
-  const [ visible, setVisible ] = useState()
+  const [ visible, setVisible ] = useState(false)
 
   return (
 
