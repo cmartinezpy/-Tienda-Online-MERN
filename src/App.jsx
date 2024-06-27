@@ -1,15 +1,28 @@
-
+import { useState } from 'react';
 import './App.css'
-import { ListCardProductos } from './components/ListCardProductos'
+import {db} from './data/db'
+import { ProductoContainer } from './components/PageInicio/ProductoContainer'; 
+import { Header } from './components/comun/Header';
+import { Footer } from './components/comun/Footer';
+
 
 function App() {
+  const [data, setData] = useState(db)
+  if(false){
+    
+    <login />
+  }
+
 
   return (
     <>
-      
-      <h1>Tienda Online MERN</h1>
-      <ListCardProductos />
-     
+      <Header />
+   
+
+       <ProductoContainer />   
+
+
+       <Footer />
     </>
   )
 }
