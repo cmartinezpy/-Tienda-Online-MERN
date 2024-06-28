@@ -1,28 +1,29 @@
 // import { useState } from 'react';
-import './App.css'
 // import {db} from './data/db'
-import { ProductoContainer } from './components/PageInicio/ProductoContainer';
+// import { Footer } from './components/comun/Footer';
 
-import { Footer } from './components/comun/Footer';
+import './App.css'
+import { Routes, Route } from 'react-router-dom';
 
+import { LoginPage } from './pages/auth/LoginPage';
+import { Dashboard } from './pages/dashboard/Dashboard';
+import { HomePage } from './pages/home/HomePage';
 
 function App() {
 
-  // if(false){
-    
-  //   <login />
-  // }
-
-
   return (
+
     <>
-   
 
-       <ProductoContainer />   
+      {/* Navegacion de la app */}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+      </Routes>
 
-
-       <Footer />
     </>
+
   )
 }
 

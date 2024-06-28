@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-export const NavList = (props) => {
+export const NavList = ( props ) => {
+  
   const { visible } = props;
 
   return (
+
     <div className="flex relative">
       <ul
         className={`
@@ -15,21 +18,26 @@ export const NavList = (props) => {
             `${visible ? "flex" : "hidden"}
             text-white hover:text-salmon w-full sm:w-32 m-1 p-5 justify-center`}
         >
-          Productos
+          <Link to="/dashboard/productos">
+             Productos
+          </Link>
         </li>
         <li
           className={`
             ${visible ? "flex" : "hidden"}
-            text-white hover:text-salmon w-full sm:w-32m-1 p-5 justify-center`}
+            text-white hover:text-salmon w-full sm:w-32 m-1 p-5 justify-center`}
         >
-          Usuarios
+          <Link to="/dashboard/usuarios">
+             Usuarios
+          </Link>
         </li>
       </ul>
     </div>
+
   );
+
 };
 
 NavList.propTypes = {
   visible: PropTypes.bool.isRequired,
 };
-
