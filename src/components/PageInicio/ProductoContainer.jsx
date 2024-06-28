@@ -28,8 +28,7 @@ const[cart, setCart] = useState([]);
                       producto ={producto}
 
                     />
-              </div>
-               
+              </div>       
         ))}
        </div>
        
