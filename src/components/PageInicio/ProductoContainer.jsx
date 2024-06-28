@@ -12,9 +12,6 @@ export const ProductoContainer = () => {
 
   return (
     <>
-      <div>
-        <Header isDashboard={false} textoBoton={"Login"} />
-      </div>
 
       <div className="mt-16 p-1">
         <h1 className="mb-6 text-3xl font-bold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">

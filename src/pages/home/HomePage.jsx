@@ -10,7 +10,7 @@ export const HomePage = () => {
 
         <Header
             isDashboard={false}
-            titulo="Inicio"
+            titulo="Tienda Online MERN"
             textoBoton={"Login"}
         />
 
