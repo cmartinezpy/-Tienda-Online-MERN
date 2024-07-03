@@ -10,8 +10,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Ignorar archivos de entorno
-/client/.env
-/server/.env
+# /client/.env
+# /server/.env
 
 # Ignorar build outputs
 /client/build
