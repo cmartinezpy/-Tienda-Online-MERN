@@ -1,30 +1,22 @@
 import  PropTypes  from 'prop-types';
+import { useContext, useEffect } from 'react';
+import { ProductContext } from '../../contexts/productContext';
+import { getProductosDashboard, deleteProductoDashboard } from '../../actions/productActions';
 
 export const TableProductos = ( { setMostrarFormulario }) => {
 
-  const productos = [
-    {
-      id: 1,
-      nombre: 'Producto 1',
-      descripcion: 'Descripcion del producto 1',
-      cantidad: '20',
-      precio: '1000'
-    },
-    {
-      id: 2,
-      nombre: 'Producto 2',
-      descripcion: 'Descripcion del producto 2',
-      cantidad: '30',
-      precio: '2000'
-    },
-    {
-      id: 3,
-      nombre: 'Producto 3',
-      descripcion: 'Descripcion del producto 3',
-      cantidad: '40',
-      precio: '3000'
-    }
-  ]
+  const { state, dispatch } = useContext(ProductContext);
+
+  useEffect(() => {
+    getProductosDashboard(dispatch);
+  }, [dispatch]);
+
+  console.log(state);
+
+  const handleDeleteProducto = (id) => {
+
+    deleteProductoDashboard(dispatch, id);
+  };
 
 
   return (
@@ -79,37 +71,47 @@ export const TableProductos = ( { setMostrarFormulario }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {productos.map(product => (
-                  <tr key={product.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-12 w-12">
-                          <img className="h-12 w-12 rounded-full" src={product.image} alt="" />
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-normal text-gray-900">{product.nombre}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{product.descripcion}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className="px-2 inline-flex text-sm leading-5
-                      font-semibold rounded-full bg-green-100 text-green-800"
-                      >
-                        {product.cantidad}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {product.precio}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-normal">
-                      <button className="bg-red-500 rounded-full pl-3 pr-3 pt-1 pb-1 text-white"> X </button>
+              {state.products.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-center text-sm font-normal text-gray-500">
+                      No hay productos disponibles
                     </td>
                   </tr>
-                ))}
+                ) : (
+                    state.products.map(product => (
+                      <tr key={product.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-12 w-12">
+                              <img className="h-12 w-12 rounded-full" src={product.image} alt="" />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-normal text-gray-900">{product.nombre}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap max-w-2">
+                          <div className="text-sm text-gray-900 max-w-2">{product.descripcion}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className="px-2 inline-flex text-sm leading-5
+                          font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            {product.cantidad}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {product.precio}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-normal">
+                          <button className="bg-red-500 rounded-full pl-3 pr-3 pt-1 pb-1 text-white"
+                            onClick={() => handleDeleteProducto(product._id)}    
+                            > X </button>
+                        </td>
+                      </tr>
+                    ))
+                )}
               </tbody>
             </table>
           </div>
