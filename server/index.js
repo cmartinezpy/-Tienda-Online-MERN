@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors'); // middleware 
 const mongoose = require('mongoose');
+
+const Producto = require('./models/Producto');
 const { Usuarios } = require('./models/usuario');
 
 const app = express();
@@ -22,7 +24,7 @@ var corsOptions = {
 
 
 
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // + Conexión a la base de datos
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -37,6 +39,11 @@ mongoose
   .catch((error) => {
     console.error("Error conectando a MongoDB:", error);
   });
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// + USUARIOS
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //#region Filtrar todos los usuarios
   app.get('/usuario', async(req, res) => {
@@ -126,12 +133,103 @@ app.delete('/usuario/:id', async (req, res)=>{
 })
 //#endregion DELETE Usuuario
 
-// Hacemos que nuestra aplicación escuche el puerto que configuramos
-// con el metodo listen(puerto, callback)
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
 
-  
 
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// + PRODUCTOS
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  // Endpoint para obtener todos los productos y mostrarlos en la página principal
+  app.get("/productos", async (req, res) => {
+    try {
+      const productos = await Producto.find({});
+      if ( !productos || productos.length === 0 ) {
+        return res.status(201).json({ error: "No existen productos cargados" });
+      }
+      res.status(200).json(productos);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Endpoint para obtener un producto por su ID y mostrarlo en la página de detalle
+  app.get("/producto/:id", async (req, res) => {
+
+    try {
+      const producto = await Producto.findById(req.params.id);
+      if (!producto) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.status(200).json(producto);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  });
+
+  // Endpoint para obtener todos los productos - Ruta protegida
+  app.get("/dashboard/productos", async (req, res) => {
+    try {
+      const productos = await Producto.find({});
+      if ( !productos || productos.length === 0 ) {
+        return res.status(404).json({ error: "No existen productos cargados" });
+      }
+      res.status(200).json(productos);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Endpoint para crear un producto - Ruta protegida
+  app.post("/dashboard/producto", async (req, res) => {
+
+    try {
+      const producto = new Producto(req.body);
+      await producto.save();
+      res.status(201).json(producto);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  });
+
+  // Endpoint para actualizar un producto - Ruta protegida
+  app.put("/dashboard/producto/:id", async (req, res) => {
+
+    try {
+      const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!producto) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.status(200).json(producto);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  });
+
+  // Endpoint para eliminar un producto - Ruta protegida
+  app.delete("/dashboard/producto/:id", async (req, res) => {
+
+    try {
+      const producto = await Producto.findByIdAndDelete(req.params.id);
+      if (!producto) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.status(200).json(producto);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  });
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+// Hacemos que nuestra app escuche el puerto configurado
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

@@ -1,8 +1,46 @@
 
 import PropTypes from 'prop-types';
+import { useState, useContext } from 'react';
+import { addProductoDashboard } from '../../actions/productActions';
+import { ProductContext } from '../../contexts/productContext';
 
 export const FormularioNuevoProducto = ({ setMostrarForm }) => {
-  console.log(setMostrarForm);
+
+  // Estados para los campos del formulario
+  const [nombre, setNombre] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [cantidad, setCantidad] = useState('');
+
+  const { dispatch } = useContext(ProductContext);
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    const producto = {
+      nombre,
+      categoria,
+      descripcion,
+      precio,
+      cantidad,
+    };
+
+    // Agregar producto al dashboard
+    await addProductoDashboard(dispatch, producto);
+
+    // Limpiar campos
+    setNombre('');
+    setCategoria('');
+    setDescripcion('');
+    setPrecio('');
+    setCantidad('');
+
+    // Cerrar formulario
+    setMostrarForm();
+
+  }
 
   return (
 
@@ -11,7 +49,8 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
         Nuevo Producto
       </h1>
 
-      <form className="max-w-md mx-auto min-w-[100px] lg:min-w-[600px]">
+      <form className="max-w-md mx-auto min-w-[100px] lg:min-w-[600px]"
+             onSubmit={handleSubmit}>
 
         <div className="grid md:grid-cols-2 md:gap-6">
           
@@ -24,6 +63,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setNombre(e.target.value)}
             />
             <label
               htmlFor="floating_nombre"
@@ -42,6 +82,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setCategoria(e.target.value)}
             />
             <label
               htmlFor="floating_categoria"
@@ -62,6 +103,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
             placeholder=" "
             rows="3"
             required=""
+            onChange={(e) => setDescripcion(e.target.value)}
           ></textarea>
           <label
             htmlFor="floating_descripcion"
@@ -72,7 +114,6 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
         </div>
 
         {/* Input precio */}
-
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="relative z-0 w-full mb-5 group">
             <input
@@ -82,6 +123,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setPrecio(e.target.value)}
             />
             <label
               htmlFor="floating_precio"
@@ -100,6 +142,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setCantidad(e.target.value)}
             />
             <label
               htmlFor="floating_cantidad"
@@ -117,6 +160,7 @@ export const FormularioNuevoProducto = ({ setMostrarForm }) => {
         >
           Cancelar
         </button>
+
         <button
           type="submit"
           className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:bg-cyan-700 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
