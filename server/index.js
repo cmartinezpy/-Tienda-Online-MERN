@@ -69,18 +69,21 @@ app.get('/usuario/:id', async (req, res) => {
 app.post( '/usuario', async (req,res) => {
 
   try {
-    const newUser = new Usuarios({
+    const NuevoUsuario = new Usuarios({
       nombre: req.body.nombre,
-      password: req.body.apellido,
+      apellido: req.body.apellido,
       cedula : req.body.cedula,
       password: req.body.password,
+      email: req.body.email,
       direccion: req.body.direccion,
       fecha_nacimiento: req.body.fecha_nacimiento,
-      telefono: req.body.telefono
+      telefono: req.body.telefono,
+      activo: req.body.activo,
     });
-
-    await newUser.save();
-    res.status(201).json({ message: "Usuario registrado correctamente" })
+    if(NuevoUsuario)
+      //console.log(NuevoUsuario)
+      await NuevoUsuario.save();
+      res.status(201).json({ message: "Usuario registrado correctamente" })
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -90,16 +93,15 @@ app.post( '/usuario', async (req,res) => {
 //#region UPDATE para el Usuario PUT
 app.put('/usuario/:id', async (req, res)=> {
       const {id} = req.params;
-      const {nombre, apellido, cedula, password, direccion, fecha_nacimiento, telefono} = req.body
+      const {nombre, apellido, cedula, password,email,direccion,fecha_nacimiento, telefono, activo} = req.body
       try {
 
             const updateUsuario = await Usuarios.findByIdAndUpdate(id,
-            {nombre,apellido, cedula, password,direccion, fecha_nacimiento,telefono},
+            {nombre,apellido,cedula,password,email,direccion, fecha_nacimiento,telefono,activo},
             { new: true, runValidators: true }
           )
           if(!updateUsuario)
             return res.status(404).json({ message: "Usuario no encontrado" });
-
           res.status(200).json(updateUsuario)
         
       } catch (error) {
@@ -114,7 +116,7 @@ app.delete('/usuario/:id', async (req, res)=>{
     const eliminarUsuario = await Usuarios.findByIdAndDelete(id);
 
     if (!eliminarUsuario) {
-      return res.status(404).send('User not found');
+      return res.status(404).send('No existe el usuario');
     }
 
     res.send(eliminarUsuario);
