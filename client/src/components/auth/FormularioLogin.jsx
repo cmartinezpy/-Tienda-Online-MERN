@@ -40,7 +40,10 @@ export const FormularioLogin = () => {
     setErrorMessage('');
 
     try {
-      await loginUser(loginData, dispatch);
+      const res = await loginUser(loginData, dispatch);
+      if (res === 'error') {
+        setErrorMessage('Error al iniciar sesión');
+      }
     } catch (error) {
       setErrorMessage('Error al iniciar sesión. Por favor, intenta nuevamente.');
     }

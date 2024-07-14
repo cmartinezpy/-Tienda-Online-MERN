@@ -2,47 +2,53 @@ import { jwtDecode } from "jwt-decode";
 
 
 export const loginUser = async (credentials, dispatch) => {
+  const path = 'http://localhost:3001/login';
+  const body = credentials; // { email: '', password: ''}
 
-    const path = 'http://localhost:3001/login';
-    const body = credentials; // { email: '', password: ''}
-    // enviar la consulta al servidor
-    fetch( path, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(body)
-                }
-            )
-    .then(response => response.json())
-    .then(data => {
-        if(data.ok === true) {
-            // recibir el token de la respuesta del servidor
-            const token = data.token;
-            // guardar el token en el window.localStorage 
-            localStorage.setItem('jwt', token);
-            const decodedToken = jwtDecode(token); // { email: 'email del usuario'}
-            dispatch({
-                type: 'LOGIN',
-                payload: {
-                    email: decodedToken.email,
-                    rol: decodedToken.rol
-                }
-            });
-            return 'done';
-        } else {
-            // si hay un error, setear el currentUser a un objeto vacio
-            dispatch({
-                type: 'LOGOUT',
-                payload: {
-                    email: '',
-                    rol: ''
-                }
-            });
-            return 'error';
-        }
-    })
-}
+  try {
+      const response = await fetch(path, {
+          method: 'POST',
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body)
+      });
+
+      // Verificar si la respuesta no es OK
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data.ok === true) {
+          // recibir el token de la respuesta del servidor
+          const token = data.token;
+          // guardar el token en el window.localStorage 
+          localStorage.setItem('jwt', token);
+          const decodedToken = jwtDecode(token); // { email: 'email del usuario'}
+          dispatch({
+              type: 'LOGIN',
+              payload: {
+                  email: decodedToken.email,
+                  rol: decodedToken.rol
+              }
+          });
+          return 'done';
+      } else {
+          throw new Error(data.error || 'Error logging in');
+      }
+  } catch (error) {
+      dispatch({
+          type: 'LOGOUT',
+          payload: {
+              email: '',
+              rol: ''
+          }
+      });
+      return 'error';
+  }
+};
 
 // esta accion va a borrar el token del localStorage y va a mandar un currentUser vacio al dispatch
 export const logoutUser = (dispatch) => {
