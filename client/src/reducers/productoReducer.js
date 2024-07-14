@@ -25,12 +25,12 @@ export function productoReducer( state, action ) {
                 ...state,
                 products: action.payload
             };
-            case 'DELETE_PRODUCTO': // Ruta Protegida
+        case 'DELETE_PRODUCTO': // Ruta Protegida
             return {
               ...state,
               products: state.products.filter(product => product._id !== action.payload)
             };
-          case 'EDIT_PRODUCTO': // Ruta Protegida
+        case 'EDIT_PRODUCTO': // Ruta Protegida
             return {
               ...state,
               products: state.products.map(product => 

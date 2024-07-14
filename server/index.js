@@ -2,24 +2,36 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors'); // middleware 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt'); // Para encriptar contraseñas
 
+// Importamos los modelos de la base de datos
 const Producto = require('./models/Producto');
 const { Usuarios } = require('./models/usuario');
 
+// JSON WEB TOKEN
+const jwt = require('jsonwebtoken');
+const jwtConfig = require('./jwt.config.js');
+
+// Configuramos el servidor de express
 const app = express();
 
+
 app.use(express.json()); // Configuracion para manejar solicitudes JSON
+
+app.set('key', jwtConfig.clave); // Configuramos la clave secreta para JWT
+
 // Activamos CORS para todas las solicitudes con la configuracion de arriba.
 app.use(
-    cors(corsOptions)
-  );
+  cors(corsOptions)
+);
 
 const PORT = process.env.PORT || '3001'; 
+
 // Crear una configuracion de cors
 var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 
 
@@ -29,7 +41,7 @@ var corsOptions = {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const uri = `mongodb+srv://${process.env.DB_USUARIO}:${process.env.DB_PASSWORD}@${process.env.DB_DOMAIN}/${process.env.DB_NAME}?appName=${process.env.DB_CLUSTER}`;
-//const uri = 'mongodb+srv://verasonia3:TFryYZk7C0qJlxJV@cluster0.tdddscl.mongodb.net/tienda-online-mern?retryWrites=true&w=majority&appName=Cluster0';
+
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 mongoose
   .connect(uri)
@@ -41,22 +53,102 @@ mongoose
   });
 
 
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// + AUTENTICACIÓN
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+// Ruta para autenticar al usuario y hacer login
+app.post("/login", async (req, res) => {
+
+  try {
+
+    // Chequeamos si el email existe
+    const user = await Usuarios.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ error: "El email no existe en nuestra base de datos" });
+    }
+
+    // Comparar las contraseñas
+    const passwordMatch = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!passwordMatch) {
+      return res
+        .status(401)
+        .json({ error: "La contraseña no es correcta" });
+    }
+
+    // Generate JWT token
+    const secret = app.get("key");
+    const token = jwt.sign({ email: user.email , rol: user.rol }, secret);
+
+    res.status(200).json({ token, ok: true });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+  
+});
+
+// Ruta para registrar al usuario // Desde el cliente
+app.post("/registro", async (req, res) => {
+
+  try {
+
+    // Chequeamos si el email existe
+    const user = await Usuarios.findOne({ email: req.body.email });
+
+    if (user) {
+      return res
+        .status(401)
+        .json({ error: "El email ya existe" });
+    }
+
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    // Creamos el objeto usuario desde el modelo Usuario
+    const newUser = new Usuarios({
+      nombre: req.body.nombre,
+      apellido: req.body.apellido,
+      email: req.body.email,
+      password: hashedPassword,
+      rol: "cliente"
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: "Usuario registrado correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+  
+});
+
+
+
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // + USUARIOS
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //#region Filtrar todos los usuarios
-  app.get('/usuario', async(req, res) => {
-    try {
-      const usuarios = await Usuarios.find({})
+app.get('/usuario', async (req, res) => {
+  try {
+    const usuarios = await Usuarios.find({})
 
-      res.status(200).json(usuarios);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+    res.status(200).json(usuarios);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 
-  })
-  //#endregion Filtrar todos los usuarios
+})
+//#endregion Filtrar todos los usuarios
+
 //#region Usuario filtrando por ID
 app.get('/usuario/:id', async (req, res) => {
   const { id } = req.params;
@@ -72,25 +164,42 @@ app.get('/usuario/:id', async (req, res) => {
  }
 })
 //#endregion
-//#region POST para usuarios
+
+//#region POST para usuarios // Desde admin
 app.post( '/usuario', async (req,res) => {
 
   try {
+
+    // Chequeamos si el email existe
+    const user = await Usuarios.findOne({ email: req.body.email });
+
+    if (user) {
+      return res
+        .status(401)
+        .json({ error: "El email ya existe" });
+    }
+
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
     const NuevoUsuario = new Usuarios({
       nombre: req.body.nombre,
       apellido: req.body.apellido,
       cedula : req.body.cedula,
-      password: req.body.password,
+      password: hashedPassword,
       email: req.body.email,
       direccion: req.body.direccion,
       fecha_nacimiento: req.body.fecha_nacimiento,
       telefono: req.body.telefono,
-      activo: req.body.activo,
+      rol: req.body.rol,
+      activo: req.body.activo
     });
+
     if(NuevoUsuario)
-      //console.log(NuevoUsuario)
+
       await NuevoUsuario.save();
       res.status(201).json({ message: "Usuario registrado correctamente" })
+
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -116,6 +225,7 @@ app.put('/usuario/:id', async (req, res)=> {
       }
 })
 //#endregion UPDATE para el Usuario PUT
+
 //#region DELETE Usuuario
 app.delete('/usuario/:id', async (req, res)=>{
  const {id} = req.params
@@ -132,8 +242,6 @@ app.delete('/usuario/:id', async (req, res)=>{
   }
 })
 //#endregion DELETE Usuuario
-
-
 
 
 

@@ -2,11 +2,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProductosPage } from './productos/ProductosPage';
 import { UsuariosPage } from './usuarios/UsuariosPage';
-import { ProductProvider } from '../../contexts/productProvider';
 
 export const Dashboard = () => {
-  return (
-    <ProductProvider>
+  return (  
       <div>
         {/* Navegacion del dashboard */}
         <Routes>
@@ -15,6 +13,5 @@ export const Dashboard = () => {
           <Route path="usuarios" element={<UsuariosPage />} />
         </Routes>
       </div>
-    </ProductProvider>
   );
 };

@@ -72,3 +72,28 @@ export const addProductoDashboard = async (dispatch, producto) => {
     console.error('Error:', error);
   }
 };
+
+export const getProductosHome = async (dispatch) => {
+  try {
+
+    const response = await fetch(`http://localhost:3001/productos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      
+      localStorage.setItem('productos_home', JSON.stringify(data));
+      dispatch({ type: 'SET_PRODUCTOS_HOME', payload: data });
+
+    } else {
+      console.error('Error al obtener los productos', data);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}

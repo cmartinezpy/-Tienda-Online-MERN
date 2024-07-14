@@ -11,8 +11,6 @@ export const TableProductos = ( { setMostrarFormulario }) => {
     getProductosDashboard(dispatch);
   }, [dispatch]);
 
-  console.log(state);
-
   const handleDeleteProducto = (id) => {
 
     deleteProductoDashboard(dispatch, id);
@@ -82,16 +80,21 @@ export const TableProductos = ( { setMostrarFormulario }) => {
                       <tr key={product.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 h-12 w-12">
-                              <img className="h-12 w-12 rounded-full" src={product.image} alt="" />
+                            <div className="flex-shrink-0 h-16 w-12">
+                              { product.imagen === "" ? ( 
+                                  <img className="h-16 w-12 rounded-full" src={`/img/guitarra_02.jpg`} alt="" />
+                                ) : (
+                                  <img className="h-16 w-12 rounded-full" src={`/img/${product.imagen}.jpg`} alt="" />
+                                )
+                              }
                             </div>
                             <div className="ml-4">
                               <div className="text-sm font-normal text-gray-900">{product.nombre}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap max-w-2">
-                          <div className="text-sm text-gray-900 max-w-2">{product.descripcion}</div>
+                        <td className="px-6 py-4 whitespace-nowrap max-w-xs">
+                          <div className="text-sm text-gray-900 truncate">{product.descripcion}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span

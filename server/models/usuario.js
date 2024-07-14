@@ -9,6 +9,7 @@ const usuarioSchema = new mongoose.Schema({
     direccion: String,
     fecha_nacimiento: Date,
     telefono: Number,
+    rol: String,
     activo : Boolean,
 }, { collection: 'usuarios' })
 

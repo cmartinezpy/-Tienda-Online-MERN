@@ -1,14 +1,20 @@
-// import React from 'react'
-import { useState } from "react";
-import { db } from "../../data/db";
+
+import { useContext, useEffect } from "react";
 import { ListCardProductos } from "./ListCardProductos";
-import { Header } from "../comun/Header";
+import { ProductContext } from "../../contexts/productContext";
+import { getProductosHome } from "../../actions/productActions";
 
 
 export const ProductoContainer = () => {
 
-  const [data, setData] = useState(db);
-  // const[cart, setCart] = useState([]);
+  const { state, dispatch } = useContext(ProductContext);
+
+  console.log(state)
+
+  useEffect(() => {
+    getProductosHome(dispatch);
+  }, [dispatch]);
+
 
   return (
     <>
@@ -18,7 +24,7 @@ export const ProductoContainer = () => {
           Catalogo de Productos
         </h1>
         <div className="grid grid-cols-3 gap-3">
-          {data.map((producto) => (
+          {state.products.map((producto) => (
             <div key={producto.id}>
               <ListCardProductos key={producto.id} producto={producto} />
             </div>
