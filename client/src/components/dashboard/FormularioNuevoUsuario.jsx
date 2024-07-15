@@ -1,8 +1,49 @@
-
 import PropTypes from 'prop-types';
+import {useState, useContext } from 'react';
+import {addUsuarioDashboard} from '../../actions/usuarioActions'
+import {usuarioContext} from '../../contexts/usuarioContext'
 
 export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
 
+  // Estados para los campos del formulario
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [email, setEmail] = useState('');
+  const [usuario, setUsuario] = useState('');
+  const [rol, setRol] = useState('');
+  const [contrasenha, setContrasenha] = useState('');
+  const [estado, setEstado]= useState('');
+
+  const {dispatch} = useContext(usuarioContext);
+  
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    const usuarios= {
+      nombre,
+      apellido,
+      email,
+      usuario,
+      rol,
+      contrasenha,
+      estado,
+    }
+
+    await addUsuarioDashboard(dispatch, usuarios);
+
+    setNombre('');
+    setApellido('');
+    setEmail('');
+    setUsuario('');
+    setRol('');
+    setContrasenha('');
+    setEstado('');
+
+    //Cerrar el formulario Usuario
+    setMostrarForm();
+  };
+ 
   return (
 
     <div id="" className="bg-white p-5 m-5 border-r-2 w-full max-w-screen-lg min-w-[320px] lg:min-w-[1000px]">
@@ -10,8 +51,9 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
         Nuevo Usuario
       </h1>
 
-      <form className="max-w-md mx-auto min-w-[100px] lg:min-w-[600px]">
-
+      <form className="max-w-md mx-auto min-w-[100px] lg:min-w-[600px]"
+        onSubmit={handleSubmit}
+        >
         <div className="grid md:grid-cols-2 md:gap-6">
           
           {/* Input nombre usuario */}
@@ -23,6 +65,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setNombre(e.target.value)}
             />
             <label
               htmlFor="floating_nombre"
@@ -41,6 +84,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setApellido(e.target.value)}
             />
             <label
               htmlFor="floating_categoria"
@@ -60,6 +104,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
             placeholder=" "
             required=""
+            onChange={(e) => setEmail(e.target.value)}
           ></input>
           <label
             htmlFor="floating_descripcion"
@@ -79,6 +124,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setUsuario(e.target.value) }
             />
             <label
               htmlFor="floating_precio"
@@ -97,6 +143,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setContrasenha(e.target.value)}
             />
             <label
               htmlFor="floating_cantidad"
@@ -116,6 +163,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setRol(e.target.value)}
             />
             <label
               htmlFor="floating_precio"
@@ -134,6 +182,7 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
+              onChange={(e) => setEstado(e.target.value)}
             />
             <label
               htmlFor="floating_cantidad"

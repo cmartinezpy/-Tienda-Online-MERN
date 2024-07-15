@@ -3,6 +3,7 @@ import { MenuDashboard } from '../../../components/dashboard/MenuDashboard'
 import { TableUsuarios } from '../../../components/dashboard/TableUsuarios'
 import { FormularioNuevoUsuario } from '../../../components/dashboard/FormularioNuevoUsuario'
 import { Header } from '../../../components/comun/Header'
+import { UsuarioProvider } from '../../../contexts/usuarioProvider'
 
 export const UsuariosPage = () => {
 
@@ -13,7 +14,9 @@ export const UsuariosPage = () => {
   }
 
   return (
+    <UsuarioProvider>
 
+  
     <div className='w-full h-auto'>
 
       {mostrarForm ? (
@@ -29,9 +32,9 @@ export const UsuariosPage = () => {
       />
 
       <MenuDashboard />
-
-
     </div>
+        
+    </UsuarioProvider>
   );
 
 }

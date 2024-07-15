@@ -1,41 +1,18 @@
 import  PropTypes  from 'prop-types';
+import { useEffect, useContext } from 'react';
+import {usuarioContext} from '../../contexts/usuarioContext'
+import { deleteUsuarioDashboard, getUsuariosDashboard } from '../../actions/usuarioActions';
 
 export const TableUsuarios = ( { setMostrarFormulario }) => {
 
-  const usuarios = [
-    {
-      id: 1,
-      nombre: 'Usuario 1',
-      apellido: 'Apellido 1',
-      usuario: 'usuario.1',
-      email: 'usuario1@user.com',
-      password: '123456',
-      rol: 'Admin',
-      estado: 'Activo'
-    },
-    {
-        id: 2,
-        nombre: 'Usuario 2',
-        apellido: 'Apellido 2',
-        usuario: 'usuario.1',
-        email: 'usuario2@user.com',
-        password: '123456',
-        rol: 'Vendedor',
-        estado: 'Activo'
-    },
-    {
-        id: 3,
-        nombre: 'Usuario 3',
-        apellido: 'Apellido 3',
-        usuario: 'usuario.1',
-        email: 'usuario3@user.com',
-        password: '123456',
-        rol: 'Partner',
-        estado: 'Activo'
-    },
-  ]
-
-
+ const {state, dispatch} = useContext(usuarioContext);
+ useEffect( () => {
+    getUsuariosDashboard(dispatch)
+ }, [dispatch]);
+ console.log(state);
+ const handleDeleteUsuario = (id) =>{
+  deleteUsuarioDashboard(dispatch, id);
+ }
   return (
 
     <div className="flex flex-col w-full">
@@ -66,12 +43,6 @@ export const TableUsuarios = ( { setMostrarFormulario }) => {
                     scope="col"
                     className="px-6 py-3 text-left text-sm font-normal text-gray-500 uppercase tracking-wider"
                   >
-                    Usuario
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-sm font-normal text-gray-500 uppercase tracking-wider"
-                  >
                     Email
                   </th>
                   <th
@@ -94,12 +65,17 @@ export const TableUsuarios = ( { setMostrarFormulario }) => {
                   </th>
                 </tr>
               </thead>
-
               <tbody className="bg-white divide-y divide-gray-200">
-
-                {usuarios.map(user => (
-
-                  <tr key={user.id}>
+              {
+                state.usuario.length === 0 ? (
+                  <tr>
+                  <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-center text-sm font-normal text-gray-500">
+                    No hay usuarios disponibles
+                  </td>
+                </tr>
+                ) : (
+                    state.usuario.map( user => (
+                  <tr key={user._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-12 w-12">
@@ -109,9 +85,6 @@ export const TableUsuarios = ( { setMostrarFormulario }) => {
                           <div className="text-sm font-normal text-gray-900">{user.nombre} {user.apellido}</div>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{user.usuario}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{user.email}</div>
@@ -124,16 +97,22 @@ export const TableUsuarios = ( { setMostrarFormulario }) => {
                         className="px-2 inline-flex text-sm leading-5
                       font-semibold rounded-full bg-green-100 text-green-800"
                       >
-                        {user.estado}
+                        {
+                          user.activo ? "Esta activo" : "No existe ningun activo"
+                            
+                        }
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-normal">
-                      <button className="bg-red-500 rounded-full pl-3 pr-3 pt-1 pb-1"> X </button>
+                      <button className="bg-red-500 rounded-full pl-3 pr-3 pt-1 pb-1"
+                        onClick={() => handleDeleteUsuario(user._id)}
+                      > 
+                        X </button>
                     </td>
                   </tr>
-
-                ))}
-
+                   ))
+                   
+                )}
               </tbody>
             </table>
           </div>
