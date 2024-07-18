@@ -81,7 +81,7 @@ export const TableProductos = ( { setMostrarFormulario }) => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-16 w-12">
-                              { product.imagen === "" ? ( 
+                              { ( product.imagen === "" || product.imagen === undefined ) ? ( 
                                   <img className="h-16 w-12 rounded-full" src={`/img/guitarra_02.jpg`} alt="" />
                                 ) : (
                                   <img className="h-16 w-12 rounded-full" src={`/img/${product.imagen}.jpg`} alt="" />
