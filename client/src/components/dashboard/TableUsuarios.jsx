@@ -10,12 +10,12 @@ export const TableUsuarios = ( { setMostrarFormulario }) => {
  useEffect( () => {
     getUsuariosDashboard(dispatch)
  }, [dispatch]);
- console.log(state);
+
  const handleDeleteUsuario = (id) =>{
   deleteUsuarioDashboard(dispatch, id);
  }
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full mt-6">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block sm:px-6 lg:px-8">
           <div className="bg-white p-5 m-5 border-r-2 w-full max-w-screen-lg min-w-[320px] lg:min-w-[1000px]">

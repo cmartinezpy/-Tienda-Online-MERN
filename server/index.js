@@ -34,6 +34,29 @@ var corsOptions = {
 }
 
 
+const verifyToken = (req, res, next) => {
+  const authorization = req.headers["authorization"];
+  if (!authorization) {
+    return res.status(401).json({ error: "No token sent" });
+  }
+
+  const token = authorization.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: "No token sent" });
+  }
+
+  const secret = app.get('key');
+
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) {
+      console.log(err);
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
 
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -150,7 +173,7 @@ app.get('/usuario', async (req, res) => {
 //#endregion Filtrar todos los usuarios
 
 //#region Usuario filtrando por ID
-app.get('/usuario/:id', async (req, res) => {
+app.get('/usuario/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
  try {
   const usuario = await  Usuarios.findById(id);
@@ -166,17 +189,13 @@ app.get('/usuario/:id', async (req, res) => {
 //#endregion
 
 //#region POST para usuarios // Desde admin
-app.post( '/usuario', async (req,res) => {
-
+app.post('/usuario', verifyToken, async (req, res) => {
   try {
-
     // Chequeamos si el email existe
     const user = await Usuarios.findOne({ email: req.body.email });
 
     if (user) {
-      return res
-        .status(401)
-        .json({ error: "El email ya existe" });
+      return res.status(401).json({ error: "El email ya existe" });
     }
 
     // Hash de la contraseña
@@ -185,29 +204,29 @@ app.post( '/usuario', async (req,res) => {
     const NuevoUsuario = new Usuarios({
       nombre: req.body.nombre,
       apellido: req.body.apellido,
-      cedula : req.body.cedula,
+      // cedula: req.body.cedula,
       password: hashedPassword,
       email: req.body.email,
-      direccion: req.body.direccion,
-      fecha_nacimiento: req.body.fecha_nacimiento,
+      // direccion: req.body.direccion,
+      // fecha_nacimiento: req.body.fecha_nacimiento,
       telefono: req.body.telefono,
       rol: req.body.rol,
       activo: req.body.activo
     });
 
-    if(NuevoUsuario)
-
-      await NuevoUsuario.save();
-      res.status(201).json({ message: "Usuario registrado correctamente" })
-
+    await NuevoUsuario.save();
+    res.status(201).json({ message: "Usuario registrado correctamente" });
   } catch (error) {
+    console.error(error); // Agrega esto para más información del error
     res.status(500).json({ error: "Internal server error" });
   }
-})
+});
+
+
 //#endregion  POST para usuarios
 
 //#region UPDATE para el Usuario PUT
-app.put('/usuario/:id', async (req, res)=> {
+app.put('/usuario/:id', verifyToken, async (req, res)=> {
       const {id} = req.params;
       const {nombre, apellido, cedula, password,email,direccion,fecha_nacimiento, telefono, activo} = req.body
       try {
@@ -227,7 +246,7 @@ app.put('/usuario/:id', async (req, res)=> {
 //#endregion UPDATE para el Usuario PUT
 
 //#region DELETE Usuuario
-app.delete('/usuario/:id', async (req, res)=>{
+app.delete('/usuario/:id', verifyToken, async (req, res)=>{
  const {id} = req.params
   try {
     const eliminarUsuario = await Usuarios.findByIdAndDelete(id);
@@ -249,7 +268,7 @@ app.delete('/usuario/:id', async (req, res)=>{
 // + PRODUCTOS
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  // Endpoint para obtener todos los productos y mostrarlos en la página principal
+  // Endpoint para obtener todos los productos y mostrarlos en la página principal - Ruta publica
   app.get("/productos", async (req, res) => {
     try {
       const productos = await Producto.find({});
@@ -262,7 +281,7 @@ app.delete('/usuario/:id', async (req, res)=>{
     }
   });
 
-  // Endpoint para obtener un producto por su ID y mostrarlo en la página de detalle
+  // Endpoint para obtener un producto por su ID y mostrarlo en la página de detalle - Ruta publica
   app.get("/producto/:id", async (req, res) => {
 
     try {
@@ -278,7 +297,7 @@ app.delete('/usuario/:id', async (req, res)=>{
   });
 
   // Endpoint para obtener todos los productos - Ruta protegida
-  app.get("/dashboard/productos", async (req, res) => {
+  app.get("/dashboard/productos", verifyToken, async (req, res) => {
     try {
       const productos = await Producto.find({});
       if ( !productos || productos.length === 0 ) {
@@ -291,7 +310,7 @@ app.delete('/usuario/:id', async (req, res)=>{
   });
 
   // Endpoint para crear un producto - Ruta protegida
-  app.post("/dashboard/producto", async (req, res) => {
+  app.post("/dashboard/producto", verifyToken, async (req, res) => {
 
     try {
       const producto = new Producto(req.body);
@@ -304,7 +323,7 @@ app.delete('/usuario/:id', async (req, res)=>{
   });
 
   // Endpoint para actualizar un producto - Ruta protegida
-  app.put("/dashboard/producto/:id", async (req, res) => {
+  app.put("/dashboard/producto/:id", verifyToken, async (req, res) => {
 
     try {
       const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -319,7 +338,7 @@ app.delete('/usuario/:id', async (req, res)=>{
   });
 
   // Endpoint para eliminar un producto - Ruta protegida
-  app.delete("/dashboard/producto/:id", async (req, res) => {
+  app.delete("/dashboard/producto/:id", verifyToken, async (req, res) => {
 
     try {
       const producto = await Producto.findByIdAndDelete(req.params.id);

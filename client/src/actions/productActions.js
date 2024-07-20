@@ -3,15 +3,18 @@
 // Aca se crean las acciones que se van a utilizar en el reducer. 
 // Realiza la peticion al servidor y actualiza el estado del reducer.
 
-// Obtiene todos los productos
+// Obtiene todos los productos para el dashboard - Ruta protegida
 export const getProductosDashboard = async ( dispatch ) => {
 
     try {
 
+      const token = localStorage.getItem('jwt');
+
       const response = await fetch(`http://localhost:3001/dashboard/productos`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
       });
   
@@ -28,13 +31,18 @@ export const getProductosDashboard = async ( dispatch ) => {
 };
 
 
-// Elimina un producto del dashboard
+// Elimina un producto del dashboard - Ruta protegida
 export const deleteProductoDashboard = async (dispatch, id) => {
+
   try {
+
+    const token = localStorage.getItem('jwt');
+
     const response = await fetch(`http://localhost:3001/dashboard/producto/${id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
     });
 
@@ -50,13 +58,18 @@ export const deleteProductoDashboard = async (dispatch, id) => {
 };
 
 
-// Crea un producto en el dashboard
+// Crea un producto en el dashboard - Ruta protegida
 export const addProductoDashboard = async (dispatch, producto) => {
+
   try {
+
+    const token = localStorage.getItem('jwt');
+
     const response = await fetch(`http://localhost:3001/dashboard/producto`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${token}`
       },
       body: JSON.stringify(producto)
     });
@@ -73,6 +86,8 @@ export const addProductoDashboard = async (dispatch, producto) => {
   }
 };
 
+
+// Obtiene los productos para la home - Ruta publica
 export const getProductosHome = async (dispatch) => {
   try {
 
@@ -92,6 +107,31 @@ export const getProductosHome = async (dispatch) => {
 
     } else {
       console.error('Error al obtener los productos', data);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
+// Obtiene un producto en detalle - Ruta publica
+export const getProductoDetalle = async (dispatch,id) => {
+
+  try {
+
+    const response = await fetch(`http://localhost:3001/producto/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      dispatch({ type: 'SET_PRODUCTO_DETALLE', payload: data });
+    } else {
+      console.error('Error al obtener el producto', data);
     }
   } catch (error) {
     console.error('Error:', error);

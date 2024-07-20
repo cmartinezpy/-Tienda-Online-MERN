@@ -9,10 +9,13 @@ export const getUsuariosDashboard= async ( dispatch ) => {
 
     try {
 
+      const token = localStorage.getItem('jwt');
+
       const response = await fetch(`http://localhost:3001/usuario`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
         },
       });
   
@@ -29,11 +32,16 @@ export const getUsuariosDashboard= async ( dispatch ) => {
 };
 
 export const deleteUsuarioDashboard = async (dispatch, id) => {
+
     try {
+
+      const token = localStorage.getItem('jwt');
+
       const response = await fetch(`http://localhost:3001/usuario/${id}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
         },
       });
   
@@ -47,13 +55,22 @@ export const deleteUsuarioDashboard = async (dispatch, id) => {
       console.error('Error:', error);
     }
   };
+
+
+
 //Agregar Usuarios al Dashboard
   export const addUsuarioDashboard = async (dispatch, usuario) => {
+
     try {
+
+      const token = localStorage.getItem('jwt');
+      console.log(usuario);
+
       const response = await fetch(`http://localhost:3001/usuario`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
         },
         body: JSON.stringify(usuario)
       });

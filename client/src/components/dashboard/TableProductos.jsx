@@ -117,6 +117,7 @@ export const TableProductos = ( { setMostrarFormulario }) => {
                 )}
               </tbody>
             </table>
+            
           </div>
         </div>
       </div>

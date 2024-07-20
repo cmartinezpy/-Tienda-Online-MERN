@@ -9,10 +9,10 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [telefono, setTelefono] = useState('');
   const [rol, setRol] = useState('');
-  const [contrasenha, setContrasenha] = useState('');
-  const [estado, setEstado]= useState('');
+  const [password, setPassword] = useState('');
+  const [activo, setActivo]= useState('');
 
   const {dispatch} = useContext(usuarioContext);
   
@@ -24,10 +24,10 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
       nombre,
       apellido,
       email,
-      usuario,
+      telefono,
       rol,
-      contrasenha,
-      estado,
+      password,
+      activo,
     }
 
     await addUsuarioDashboard(dispatch, usuarios);
@@ -35,10 +35,10 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
     setNombre('');
     setApellido('');
     setEmail('');
-    setUsuario('');
+    setTelefono('');
     setRol('');
-    setContrasenha('');
-    setEstado('');
+    setPassword('');
+    setActivo('');
 
     //Cerrar el formulario Usuario
     setMostrarForm();
@@ -124,29 +124,29 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
-              onChange={(e) => setUsuario(e.target.value) }
+              onChange={(e) => setTelefono(e.target.value) }
             />
             <label
               htmlFor="floating_precio"
               className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform scale-75 -translate-y-6 top-3 left-0 origin-[0] peer-focus:scale-75 peer-focus:-translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100"
             >
-              Usuario
+              Teléfono
             </label>
           </div>
 
           {/* Input contraseña */}
           <div className="relative z-0 w-full mb-5 group">
             <input
-              type="text"
-              name="floating_cantidad"
-              id="floating_cantidad"
+              type="password"
+              name="floating_password"
+              id="floating_password"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
               placeholder=" "
               required=""
-              onChange={(e) => setContrasenha(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <label
-              htmlFor="floating_cantidad"
+              htmlFor="floating_password"
               className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform scale-75 -translate-y-6 top-3 left-0 origin-[0] peer-focus:scale-75 peer-focus:-translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100"
             >
               Contraseña
@@ -173,23 +173,30 @@ export const FormularioNuevoUsuario = ({ setMostrarForm }) => {
             </label>
           </div>
 
-          {/* Input Rol */}
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="floating_cantidad"
-              id="floating_cantidad"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-500 peer"
-              placeholder=" "
-              required=""
-              onChange={(e) => setEstado(e.target.value)}
-            />
-            <label
-              htmlFor="floating_cantidad"
-              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform scale-75 -translate-y-6 top-3 left-0 origin-[0] peer-focus:scale-75 peer-focus:-translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100"
-            >
-              Estado
-            </label>
+          {/* Input Estado */}
+          <div className="relative z-0 w-full mb-5 group mt-3">
+            <div className="flex items-center">
+              <label htmlFor="switch-activo" className="mr-3 text-sm text-gray-500 dark:text-gray-400">
+                Estado
+              </label>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="switch-activo"
+                  className="sr-only"
+                  checked={activo}
+                  onChange={() => setActivo(!activo)}
+                />
+                <div className="block bg-gray-200 w-14 h-8 rounded-full"
+                onClick={() => setActivo(!activo)}></div>
+                <div 
+                  className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${
+                    activo ? 'transform translate-x-6 bg-cyan-400' : ''
+                  }`}
+                  onClick={() => setActivo(!activo)}
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
 

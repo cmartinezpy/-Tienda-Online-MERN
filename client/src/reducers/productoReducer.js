@@ -20,10 +20,10 @@ export function productoReducer( state, action ) {
                 ...state,
                 products: action.payload
             };
-        case 'SET_PRODUCTO_HOME':
+        case 'SET_PRODUCTO_DETALLE':
             return {
                 ...state,
-                products: action.payload
+                productoDetalle: action.payload
             };
         case 'DELETE_PRODUCTO': // Ruta Protegida
             return {

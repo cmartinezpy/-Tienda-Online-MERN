@@ -9,8 +9,6 @@ export const ProductoContainer = () => {
 
   const { state, dispatch } = useContext(ProductContext);
 
-  console.log(state)
-
   useEffect(() => {
     getProductosHome(dispatch);
   }, [dispatch]);
