@@ -1,5 +1,5 @@
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 console.log('API_URL:', API_URL);
 
 // Aca se crean las acciones que se van a utilizar en el reducer. 

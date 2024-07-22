@@ -1,5 +1,5 @@
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // Aca se crean las acciones que se van a utilizar en el reducer. 
 // Realiza la peticion al servidor y actualiza el estado del reducer.
