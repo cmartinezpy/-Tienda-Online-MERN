@@ -1,4 +1,6 @@
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // Aca se crean las acciones que se van a utilizar en el reducer. 
 // Realiza la peticion al servidor y actualiza el estado del reducer.
 
@@ -11,7 +13,7 @@ export const getUsuariosDashboard= async ( dispatch ) => {
 
       const token = localStorage.getItem('jwt');
 
-      const response = await fetch(`http://localhost:3001/usuario`, {
+      const response = await fetch(`${API_URL}/usuario`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ export const deleteUsuarioDashboard = async (dispatch, id) => {
 
       const token = localStorage.getItem('jwt');
 
-      const response = await fetch(`http://localhost:3001/usuario/${id}`, {
+      const response = await fetch(`${API_URL}/usuario/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ export const deleteUsuarioDashboard = async (dispatch, id) => {
       const token = localStorage.getItem('jwt');
       console.log(usuario);
 
-      const response = await fetch(`http://localhost:3001/usuario`, {
+      const response = await fetch(`${API_URL}/usuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

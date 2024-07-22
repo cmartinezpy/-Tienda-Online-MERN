@@ -1,8 +1,9 @@
 import { jwtDecode } from "jwt-decode";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 export const loginUser = async (credentials, dispatch) => {
-  const path = 'http://localhost:3001/login';
+  const path = `${API_URL}/login`;
   const body = credentials; // { email: '', password: ''}
 
   try {
@@ -65,7 +66,7 @@ export const logoutUser = (dispatch) => {
 // Accion para registrar un usuario
 export const registerUser = async (registerData, dispatch) => {
     
-    const path = 'http://localhost:3001/registro';
+    const path = `${API_URL}/registro`;
     
     try {
       const response = await fetch(path, {

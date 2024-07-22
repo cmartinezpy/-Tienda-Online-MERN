@@ -1,4 +1,5 @@
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Aca se crean las acciones que se van a utilizar en el reducer. 
 // Realiza la peticion al servidor y actualiza el estado del reducer.
@@ -10,7 +11,7 @@ export const getProductosDashboard = async ( dispatch ) => {
 
       const token = localStorage.getItem('jwt');
 
-      const response = await fetch(`http://localhost:3001/dashboard/productos`, {
+      const response = await fetch(`${API_URL}/dashboard/productos`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ export const deleteProductoDashboard = async (dispatch, id) => {
 
     const token = localStorage.getItem('jwt');
 
-    const response = await fetch(`http://localhost:3001/dashboard/producto/${id}`, {
+    const response = await fetch(`${API_URL}/dashboard/producto/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ export const addProductoDashboard = async (dispatch, producto) => {
 
     const token = localStorage.getItem('jwt');
 
-    const response = await fetch(`http://localhost:3001/dashboard/producto`, {
+    const response = await fetch(`${API_URL}/dashboard/producto`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ export const addProductoDashboard = async (dispatch, producto) => {
 export const getProductosHome = async (dispatch) => {
   try {
 
-    const response = await fetch(`http://localhost:3001/productos`, {
+    const response = await fetch(`${API_URL}/productos`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -119,7 +120,7 @@ export const getProductoDetalle = async (dispatch,id) => {
 
   try {
 
-    const response = await fetch(`http://localhost:3001/producto/${id}`, {
+    const response = await fetch(`${API_URL}/producto/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
