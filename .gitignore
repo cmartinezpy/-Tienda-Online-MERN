@@ -60,3 +60,6 @@ Thumbs.db
 *.tmp
 *.swp
 *.swpx
+
+# .env
+server/.env
