@@ -1,9 +1,9 @@
-name: CI/CD pipeline - juespinoza
+name: CI/CD pipeline - test_despliegue
 on:
     push:
         branches:
             - dev
-            - juespinoza
+            - test_despliegue
 jobs:
     build:
         runs-on: ubuntu-latest
