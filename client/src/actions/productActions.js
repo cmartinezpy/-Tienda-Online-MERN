@@ -1,5 +1,5 @@
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = 'https://tienda-online-mern-api.vercel.app';
 console.log('API_URL:', API_URL);
 
 // Aca se crean las acciones que se van a utilizar en el reducer. 

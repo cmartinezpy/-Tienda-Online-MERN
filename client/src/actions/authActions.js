@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = 'https://tienda-online-mern-api.vercel.app';
 
 
 export const loginUser = async (credentials, dispatch) => {
