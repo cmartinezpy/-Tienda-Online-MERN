@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 const API_URL = 'https://tienda-online-mern-api.vercel.app';
 
 
@@ -23,11 +23,12 @@ export const loginUser = async (credentials, dispatch) => {
       const data = await response.json();
 
       if (data.ok === true) {
+        
           // recibir el token de la respuesta del servidor
           const token = data.token;
           // guardar el token en el window.localStorage 
           localStorage.setItem('jwt', token);
-          const decodedToken = jwtDecode(token); // { email: 'email del usuario'}
+          const decodedToken = jwtDecode(token);
           dispatch({
               type: 'LOGIN',
               payload: {

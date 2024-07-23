@@ -1,6 +1,5 @@
 
 const API_URL = 'https://tienda-online-mern-api.vercel.app';
-console.log('API_URL:', API_URL);
 
 // Aca se crean las acciones que se van a utilizar en el reducer. 
 // Realiza la peticion al servidor y actualiza el estado del reducer.
