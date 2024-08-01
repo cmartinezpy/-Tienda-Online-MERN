@@ -1,5 +1,5 @@
 # Tienda Online MERN
-
+Autores: Sonia-mvg, cmartinezpy
 Tienda online basico con vite + react. Arquitectura MERN
 Hay que crear un archivo .env dentro del directorio server donde estaria las claves, las configuraciones para conectar con la Base de Datos
 ![ABMproductos](https://github.com/user-attachments/assets/4d645395-2a0a-41bf-82ee-eac685367c30)
